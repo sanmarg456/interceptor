@@ -1,0 +1,9 @@
+service: "switch-interface"
+enabled: true
+SETTINGS:
+  auto_scan: false        # Scan for IPs and attach to storestracker automatically
+  checkout_id: 1234
+  SOCKET:                 # TCP settings (unused)
+    static_ip: "192.168.0.102"  # TCP protocol IP
+    static_port: 25803 # if auto_scan is off, use this TCP port
+

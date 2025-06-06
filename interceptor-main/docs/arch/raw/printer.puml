@@ -1,0 +1,24 @@
+@startuml
+participant RPi
+participant Print_Service
+participant Messaging_broker
+actor Printer
+
+RPi -> Print_Service **: Start Printer service
+
+===Initialization===
+Print_Service -> Print_Service: Scan for USB devices\n10 retries
+alt Printer found
+Print_Service -> Messaging_broker: Print_ready=true
+else Printer not found
+Print_Service -> Messaging_broker: Print_ready=false
+Print_Service -> Messaging_broker: Print_ready=<failure_code>
+end
+
+===Until power reset===
+Messaging_broker -> Print_Service: Print message in ASCII
+note right: Print it irrespective of the message
+Print_Service -> Printer: Print the message
+Print_Service -> Messaging_broker: Print_status=<status>
+
+@enduml

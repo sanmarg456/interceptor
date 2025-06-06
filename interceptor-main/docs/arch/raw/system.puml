@@ -1,0 +1,38 @@
+@startuml
+title Raspberry Pi Startup Sequence with Docker Containers
+actor Router
+actor POS
+actor Printer
+actor Switch
+participant RPi
+
+RPi -> RPi: Power On
+RPi -> RPi: Boot OS
+RPi -> RPi: Initialize Network
+RPi -> RPi: Start Docker Daemon
+
+participant WiFi_Connect
+participant Messaging_broker
+participant POS_Interface
+participant Print_Service
+participant Switch_interface
+
+RPi -> WiFi_Connect **: Start WiFi Connect
+RPi -> Messaging_broker **: Start a messaging broker
+RPi -> POS_Interface **: Start interface to POS device
+RPi -> Print_Service **: Start Printer service
+RPi -> Switch_interface **: Start interface to Sesame2 switch
+
+WiFi_Connect -> WiFi_Connect: Initialize Services
+Messaging_broker -> Messaging_broker: Initialize Services
+POS_Interface -> POS_Interface: Initialize Services
+Print_Service -> Print_Service: Initialize Services
+Switch_interface -> Switch_interface: Initialize Services
+
+
+WiFi_Connect -> Router: Connect to WiFi
+POS_Interface -> POS: Run as service for\nPOS device management
+Print_Service -> Printer: Run as service for\nPrinter management
+Switch_interface -> Switch: Run as service for\nSwitch messaging
+
+@enduml

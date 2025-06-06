@@ -1,0 +1,30 @@
+@startuml
+actor POS
+participant POS_Interface
+participant Messaging_broker
+participant Print_Service
+participant Switch_interface
+
+POS_Interface -> Messaging_broker: Subscribe to service
+Print_Service -> Messaging_broker: Subscribe to service
+Switch_interface -> Messaging_broker: Subscribe to service
+
+===Success use case===
+POS -> POS_Interface: Success ASCII message\nover USB
+POS_Interface -> Messaging_broker: POS_status=Success
+Messaging_broker -> Print_Service: POS_status=Success
+Messaging_broker -> Switch_interface: POS_status=Success
+
+Print_Service -> Print_Service: Print success receipt\nvia USB
+Switch_interface -> Switch_interface: Register success\nvia Ethernet
+
+===Failure use case===
+POS -> POS_Interface: Failure ASCII message\nover USB
+POS_Interface -> Messaging_broker: POS_status=Fail
+Messaging_broker -> Print_Service: POS_status=Fail
+Messaging_broker -> Switch_interface: POS_status=Fail
+
+Print_Service -> Print_Service: Print fail receipt\nvia USB
+Switch_interface -> Switch_interface: Register failure\nvia Ethernet
+
+@enduml

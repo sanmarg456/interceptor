@@ -1,0 +1,37 @@
+FROM python:3.11-slim as build
+
+RUN apt-get update && apt-get upgrade -y gcc make git-core build-essential sudo \
+                                --no-install-recommends && \
+                                rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m venv /opt/venv
+
+# Set our working directory
+WORKDIR /usr/src/
+
+# Copy requirements.txt first for better cache on later pushes
+COPY requirements.txt .
+
+# install requirements
+RUN /opt/venv/bin/pip install -r requirements.txt
+
+# end of build process
+
+# start running in a different instance, smaller size
+FROM python:3.11-slim as run
+
+# Get Python venv
+COPY --from=build /opt/venv /opt/venv
+
+# Set our working directory
+WORKDIR /usr/src
+
+# Copy needed files into run env
+COPY *.py ./
+COPY config ./config
+COPY scripts/startup.sh ./startup.sh
+
+RUN chmod +x ./startup.sh
+
+# Run the startup script
+CMD ["./startup.sh"]

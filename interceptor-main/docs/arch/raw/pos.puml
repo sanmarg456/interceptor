@@ -1,0 +1,23 @@
+@startuml
+actor POS
+participant RPi
+participant POS_Interface
+participant Messaging_broker
+
+RPi -> POS_Interface **: Start interface to POS device
+
+===Initialization===
+POS_Interface -> POS_Interface: Scan for USB devices\n10 retries
+alt POS found
+POS_Interface -> Messaging_broker: POS_ready=true
+else POS not found
+POS_Interface -> Messaging_broker: POS_ready=false
+POS_Interface -> Messaging_broker: POS_failure=<failure_code>
+end
+
+===Until power reset===
+POS -> POS_Interface: Print message in ASCII
+POS_Interface -> POS_Interface: Process the message
+POS_Interface -> Messaging_broker: POS_status=<status>
+
+@enduml

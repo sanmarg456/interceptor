@@ -1,0 +1,23 @@
+service: "pos-interface"
+SETTINGS:
+  auto_scan: false        # Scan for USBs and attach to POS automatically
+  usb_pattern: "/dev/ttyGS*"  # Config for auto_scan when looking for USB devices
+  SERIAL:                 # Serial settings
+    static_port: '/dev/ttyUSB0' # if auto_scan is off, use this serial port to connect
+    baud: 38400               # Serial baud rate
+    serial_setting: [8, 'N', 1]  # bytesize, parity, stopbits
+
+GENERIC_STRINGS:            # Set of generic strings to be used for debug
+  - SUBTOTAL
+  - TRANSACTION
+
+SUCCESS_STRINGS:            # Set of strings to look for when identifying success
+  - valid payment
+  - payment successfull
+  - Thank you for shopping with us
+  - Please use this ticket
+
+FAILURE_STRINGS:            # Set of strings to look for when identifying failure
+  - payment failed
+  - payment unsuccesfull
+  - retry payment

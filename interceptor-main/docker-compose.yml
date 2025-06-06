@@ -1,0 +1,94 @@
+version: "2.1"
+networks: {}
+volumes:
+  resin-data: {}
+services:
+  wifi-connect:
+    build: ./wifi-connect
+    privileged: true
+    tty: true
+    restart: always
+    labels:
+      io.balena.features.dbus: '1'
+    network_mode: "host"
+
+  # MQTT broker
+  broker:
+    image: arm64v8/eclipse-mosquitto  
+    restart: always
+    network_mode: host
+    ports:
+      - "1883:1883"
+  
+  machineinit:
+    privileged: true
+    restart: "no"
+    tty: true
+    build:  ./machine-init
+    labels:
+      io.balena.features.firmware: '1'
+      io.balena.features.kernel-modules: '1'
+    depends_on:
+      - broker
+
+  # POS interface
+  pos-interface:
+    build: ./pos-interface
+    privileged: true
+    tty: true
+    restart: always
+    network_mode: host
+    labels:
+      io.balena.features.dbus: '1'
+      io.balena.features.firmware: '1'
+      io.balena.features.kernel-modules: '1'
+      io.balena.features.supervisor-api: '1'
+      io.balena.features.balena-api: '1'
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+      - "/dev/ttyUSB1:/dev/ttyUSB1"
+    volumes:
+      - 'resin-data:/data'
+    environment:
+      - LOG_LEVEL=DEBUG
+      - POS_PORT="/dev/ttyUSB0"
+      - POS_BAUD=38400
+      - PRINT_PORT="/dev/ttyUSB1"
+      - PRINT_BAUD=38400
+    depends_on:
+      - machineinit
+
+  # interface to store tracker
+  storetracker:
+    build: ./storetracker-interface
+    privileged: true
+    tty: true
+    restart: always
+    network_mode: host
+    labels:
+      io.balena.features.dbus: '1'
+      io.balena.features.firmware: '1'
+      io.balena.features.kernel-modules: '1'
+      io.balena.features.supervisor-api: '1'
+      io.balena.features.balena-api: '1'
+    volumes:
+      - 'resin-data:/data'
+    environment:
+      - LOG_LEVEL=DEBUG
+      - SWITCH_IP="192.168.0.2"
+      - SWITCH_PORT=25803
+    depends_on:
+      - broker
+  
+  serial-monitor:
+    build: ./serial-test
+    privileged: true
+    tty: true
+    environment:
+      - UDEV=1
+    volumes:
+      - 'resin-data:/data'
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+      - "/dev/ttyUSB1:/dev/ttyUSB1"
+  # more to be added

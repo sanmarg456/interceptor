@@ -1,0 +1,18 @@
+FROM balenalib/%%BALENA_ARCH%%-debian
+
+RUN install_packages dnsmasq wireless-tools wget unzip
+ENV DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  rfkill
+
+WORKDIR /usr/src/app
+
+ARG VERSION="4.11.1"
+RUN wget -qnc "https://github.com/balena-os/wifi-connect/releases/download/v$VERSION/wifi-connect-v$VERSION-linux-%%BALENA_ARCH%%.zip"
+RUN unzip -o wifi-connect-v$VERSION-linux-%%BALENA_ARCH%%.zip
+
+COPY ./start.sh .
+COPY ./custom_ui ./custom_ui
+
+CMD ["bash", "start.sh"]

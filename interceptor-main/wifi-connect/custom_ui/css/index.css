@@ -1,0 +1,22 @@
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer {
+  width: 100%;
+  font-size: 8pt;
+  color: rgb(131, 131, 131);
+  text-align: center;
+}
+
+.avoidwrap {
+  display: inline-block;
+}
+
+input[type=checkbox] {
+  vertical-align: middle;
+  position: relative;
+  bottom: 3px;
+}

@@ -1,0 +1,19 @@
+# Step 1: Use a Balena base image for Raspberry Pi (or other devices)
+FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:latest
+
+# Step 2: Enable UDEV for serial devices
+ENV UDEV 1
+
+# Step 3: Set working directory inside the container
+WORKDIR /usr/src/app
+
+# Step 4: Install required serial monitoring tools
+RUN apt update && apt install -y minicom screen python3 python3-pip \
+    && pip3 install pyserial
+
+# Step 5: Copy project files (if needed)
+COPY . .
+
+# Step 6: Expose serial devices
+CMD ["sh", "-c", "python3 serial_monitor.py | tee -a /data/serial_monitor.log 2>&1"]
+

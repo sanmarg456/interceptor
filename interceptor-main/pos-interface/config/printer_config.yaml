@@ -1,0 +1,10 @@
+service: "printer-interface"
+enabled: true
+SETTINGS:
+  auto_scan: false        # Scan for USBs and attach to printer automatically
+  usb_pattern: "/dev/usb/lp*"  # Config for auto_scan when looking for USB devices
+  SERIAL:                 # Serial settings
+    static_port: "/dev/ttyUSB1" # if auto_scan is off, use this serial port to connect
+    baud: 38400               # Serial baud rate (unused)
+    serial_setting: [8, 'N', 1]     # Serial settings (unused)
+
