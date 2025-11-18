@@ -1,0 +1,94 @@
+Test Plan for Radford POC interceptor
+Test Overview
+Objective:
+To ensure that the Interceptor accurately captures and relays receipt data from POS systems to the cloud and the printer.
+Scope:
+Test POS to Interceptor communication.
+Verify Interceptor’s data relay to cloud and printer.
+Validate compatibility with different connection protocols (USB / RS232).
+Requirements:
+Raspberry Pi Interceptor set up to intercept and relay data.
+POS systems configured to communicate over USB /. RS232.
+Cloud storage access to verify data storage.
+Receipt printer for printing test receipts.
+
+Test Cases
+1. Connection and Communication Setup
+1.Test Case ID: TC-001
+Description: Verify the connection of the POS system to the Interceptor over USB.
+Steps:
+Connect the POS to the Interceptor via USB.
+Power on the POS and the Interceptor.
+Confirm the Interceptor is detected as a printer by the POS.
+Expected Result: POS recognizes the Interceptor as a printer without errors.
+2.Test Case ID: TC-002
+Description: Verify the connection of the Interceptor to the printer over USB/RS232.
+Steps:
+Connect the Interceptor to the printer via USB/RS232.
+Power on the Interceptor and the printer.
+Confirm the Interceptor is detected by the printer by sending a signal via interceptor.
+Expected Result: The printer recognises the signal from the interceptor  without errors.	
+
+3.Test Case ID: TC-003
+Description: Test network connectivity of the Interceptor.
+Steps:
+      1.Connect the Interceptor to the network.
+      2.Confirm that it successfully connects to the cloud storage.
+Expected Result: Interceptor successfully connects to the cloud.
+
+
+2. Receipt Data Capture
+Test Case ID: TC-004
+Description: Validate receipt data capture from POS over USB/RS232.
+Steps:
+Initiate a transaction on the POS.
+Print a receipt from the POS, connected via USB/RS232.
+Expected Result: Interceptor captures and relays receipt data accurately without data loss.
+
+3. Data Relay to Cloud
+Test Case ID: TC-005
+Description: Verify receipt data transmission to cloud storage.
+Steps:
+Print a receipt from the POS (via USB or RS232).
+Confirm receipt data is stored in the cloud.
+Expected Result: Cloud storage contains an accurate copy of the receipt data.
+Test Case ID: TC-006
+Description: Test delayed cloud storage access.
+Steps:
+Disconnect network connection to the Interceptor.
+Print a receipt from the POS.
+Reconnect network and confirm receipt data appears in the cloud.
+Expected Result: Receipt data is stored in the cloud once network connectivity resumes.
+
+
+
+4. Receipt Printing
+Test Case ID: TC-007
+Description: Verify print functionality after data interception.
+Steps:
+Print a receipt from the POS connected to the Interceptor (USB/RS232).
+Confirm the receipt is printed accurately by the printer.
+Expected Result: Printed receipt matches POS receipt data.
+
+
+5. Error Handling and Recovery
+Test Case ID: TC-008
+Description: Test system behaviour when Interceptor loses connection with the POS (USB/RS232).
+Steps:
+Disconnect USB/RS232 during a transaction.
+Reconnect USB/RS232 and attempt to print.
+Expected Result: Interceptor resumes functionality and captures the next receipt accurately.
+
+6. Data Validation and Security
+Test Case ID: TC-009
+Description: Verify that all receipt data stored in the cloud matches printed receipt data.
+Steps:
+Print several receipts and capture their data in the cloud.
+Compare each cloud-stored receipt with the printed copy.
+Expected Result: All data matches without discrepancies.
+Test Case ID: TC-010
+Description: Test secure transmission of receipt data to cloud storage.
+Steps:
+Capture network traffic from Interceptor to cloud during receipt data transmission.
+Confirm data is encrypted (as per specifications).
+Expected Result: Data is securely encrypted during transmission.
